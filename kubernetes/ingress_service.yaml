@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: dashboard-api
+  name: service-dashboard-api
+spec:
+  ports:
+    - port: 80
+      targetPort: 4000
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: dashboard-api
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: dashboard-api
+  name: ingress-dashboard-api
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: service-dashboard-api
+              servicePort: 80
